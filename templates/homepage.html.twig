@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section id="posts">
+    {% include '_posts.html.twig' with posts %}
+</section>
+
+<button class="load-more" data-destination="posts" data-url="{{ path('app_load_more_posts', {page: '__page__'}) }}" data-current-page="1">
+    Charger plus d'articles
+</button>
+
+{% endblock body %}
