@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div data-controller="load-more"
+         data-load-more-url-value="{{ path('app_load_more_posts', {page: '__page__'}) }}"
+         data-load-more-current-page-value="1"
+    >
+        <section id="posts" data-load-more-target="destination">
+            {% include '_posts.html.twig' with posts %}
+        </section>
 
-<section id="posts">
-    {% include '_posts.html.twig' with posts %}
-</section>
-
-<button class="load-more" data-destination="posts" data-url="{{ path('app_load_more_posts', {page: '__page__'}) }}" data-current-page="1">
-    Charger plus d'articles
-</button>
+        <button class="load-more"
+                data-load-more-target="button"
+                data-action="load-more#loadMore"
+        >
+            Charger plus d'articles
+        </button>
+    </div>
 
 {% endblock body %}
