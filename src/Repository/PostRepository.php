@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Pagination\PaginatedResult;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -65,19 +66,26 @@ class PostRepository extends ServiceEntityRepository
 //    }
     public function findLast(int $amountOfArticles): array
     {
-        return $this->findForPage(1, $amountOfArticles);
+        return $this->findForPage(1, $amountOfArticles)->items;
     }
 
-    public function findForPage(int $page, int $amountOfArticles): array
+    public function findForPage(int $page, int $amountOfArticles): PaginatedResult
     {
         $offset = ($page - 1) * $amountOfArticles;
 
-        return $this->createQueryBuilder('p')
+        $items = $this->createQueryBuilder('p')
             ->orderBy('p.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($amountOfArticles)
             ->getQuery()
             ->getResult()
         ;
+
+        return new PaginatedResult(
+            items: $items,
+            totalItems: $this->count([]),
+            itemsPerPage: $amountOfArticles,
+            currentPage: $page
+        );
     }
 }
